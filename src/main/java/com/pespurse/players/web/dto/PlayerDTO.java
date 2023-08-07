@@ -1,5 +1,6 @@
 package com.pespurse.players.web.dto;
 
+import com.pespurse.players.repo.entity.enums.CardType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,4 +14,8 @@ public class PlayerDTO {
     String name;
     String nationality;
     String club;
+    Integer rating;
+    CardType cardType;
+    String tag;
+    Integer version;
 }
