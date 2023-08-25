@@ -6,6 +6,8 @@ import com.pespurse.players.web.handler.InternalPlayerHandler;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @AllArgsConstructor
 @RestController
 @RequestMapping("/internal/players/v1/")
@@ -33,4 +35,9 @@ public class PlayerController {
         return internalPlayerHandler.updatePlayerById(id, playerDTO);
     }
     public void deletePlayer(@RequestBody Long id){};
+
+    @PostMapping("create/{count}")
+    public Response<List<PlayerDTO>> createDummyData(@PathVariable String count) {
+        return internalPlayerHandler.createDummyPlayerDataForTest(count);
+    }
 }

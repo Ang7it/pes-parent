@@ -1,21 +1,18 @@
-package com.pespurse.match.repo.entity;
+package com.pespurse.match.web.dto;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.pespurse.match.repo.entity.enums.MatchStatus;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Data
-@Entity(name = "match")
-@Table(name = "match")
 @AllArgsConstructor
 @NoArgsConstructor
-public class MatchEntity {
-    @Id
+@Builder
+public class SaveMatchDTO {
     Long id;
     Long player1Id;
     Long player2Id;
@@ -25,5 +22,5 @@ public class MatchEntity {
     LocalDateTime matchPlayedTime;
     String matchScreenshotUrl;
     Integer matchType;
-    Integer matchStatus;
+    MatchStatus matchStatus;
 }

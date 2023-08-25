@@ -15,7 +15,7 @@ public enum PlayingStyle {
         this.playingStyleCode = playingStyleCode;
     }
 
-    PlayingStyle getPlayingStyleByPlayingCode(int playingStyleCode) {
+    public static PlayingStyle getPlayingStyleByPlayingCode(int playingStyleCode) {
         return Arrays.stream(values()).filter(value -> value.playingStyleCode == playingStyleCode).findFirst().orElseThrow(() -> new SystemFailureException(SystemErrorCode.SOMETHING_WENT_WRONG));
     }
 
