@@ -14,11 +14,11 @@ public enum MatchStatus {
         this.matchStatusCode = userTypeCode;
     }
 
-    public MatchStatus getUserTypeByCode(int userTypeCode) {
+    public static MatchStatus getMatchStatusTypeByCode(int userTypeCode) {
         return Arrays.stream(values()).filter(value -> value.matchStatusCode == userTypeCode).findFirst().orElseThrow(() -> new SystemFailureException(SystemErrorCode.SOMETHING_WENT_WRONG));
     }
 
-    private int getMatchStatusCode() {
+    public int getMatchStatusCode() {
         return this.matchStatusCode;
     }
 }

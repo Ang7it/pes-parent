@@ -16,6 +16,17 @@ public class MatchController {
     private Response<SaveMatchDTO> createNewMatch(@RequestBody SaveMatchDTO saveMatchDTO) {
         return matchHandler.createNewMatch(saveMatchDTO);
     }
+
+    @PostMapping(value = "reschedule/{matchId}")
+    private Response<SaveMatchDTO> reScheduleMatch(@RequestBody SaveMatchDTO saveMatchDTO, @PathVariable Long matchId) {
+        return matchHandler.rescheduleMatch(saveMatchDTO, matchId);
+    }
+
+    @PostMapping(value = "play/{matchId}")
+    private Response<SaveMatchDTO> playMatch(@RequestBody SaveMatchDTO saveMatchDTO, @PathVariable Long matchId) {
+        return matchHandler.playMatch(saveMatchDTO, matchId);
+    }
+
     @PutMapping(value = "update/{matchId}")
     private Response<SaveMatchDTO> updateMatch(@RequestBody SaveMatchDTO saveMatchDTO, @PathVariable Long matchId) {
         return matchHandler.updateMatch(saveMatchDTO, matchId);
