@@ -1,0 +1,7 @@
+League Flow
+
+##Public League
+1.User(League Admin) creates a new league and changes its status to registration open
+2.Users have registered in the league.
+3.User(League Admin) generates the fixture.
+4.Other users can view the fixtures.

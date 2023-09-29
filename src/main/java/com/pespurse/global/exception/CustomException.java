@@ -4,10 +4,8 @@ import com.pespurse.global.response.ResponseCode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Comment;
 import org.springframework.stereotype.Component;
 
-import java.io.Serializable;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
