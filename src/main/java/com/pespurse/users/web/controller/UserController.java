@@ -1,7 +1,6 @@
 package com.pespurse.users.web.controller;
 
 import com.pespurse.global.response.Response;
-import com.pespurse.players.web.dto.PlayerDTO;
 import com.pespurse.players.web.dto.UserLoginResponseDTO;
 import com.pespurse.users.web.dto.UserDTO;
 import com.pespurse.users.web.handler.UserHandler;

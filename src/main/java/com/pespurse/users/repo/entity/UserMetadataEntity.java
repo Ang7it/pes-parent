@@ -6,16 +6,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Entity(name = "userMatchRecord")
+@Entity(name = "userMetadata")
 @Table(name = "user_match_record")
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserMatchRecordEntity {
+public class UserMetadataEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     Long userId;
-    Long winMatchId; //this stores the match id of the users biggest win
-    Long lostMatchId; //this does the sam but for a lost match.
 
 }

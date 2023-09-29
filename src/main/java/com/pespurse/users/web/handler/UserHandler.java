@@ -5,19 +5,22 @@ import com.pespurse.global.exception.SystemFailureException;
 import com.pespurse.global.exception.errorCode.SystemErrorCode;
 import com.pespurse.global.exception.errorCode.UserErrorCode;
 import com.pespurse.global.response.Response;
-import com.pespurse.players.web.dto.PlayerDTO;
+import com.pespurse.global.util.IdGenerator;
 import com.pespurse.players.web.dto.UserLoginResponseDTO;
 import com.pespurse.users.repo.UserEntityRepository;
+import com.pespurse.users.repo.UserStatisticsEntityRepository;
 import com.pespurse.users.repo.entity.UserEntity;
+import com.pespurse.users.repo.entity.UserStatisticsEntity;
 import com.pespurse.users.util.FakeUserUtil;
 import com.pespurse.users.web.dto.UserDTO;
+import com.pespurse.users.web.dto.UserStatisticsDTO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -25,7 +28,9 @@ import java.util.*;
 public class UserHandler {
 
     private final UserEntityRepository userEntityRepository;
+    private final UserStatisticsEntityRepository userStatisticsEntityRepository;
     private final FakeUserUtil fakeUserUtil;
+
     public Response<UserDTO> handleNewUserRegistration(UserDTO userDTO) {
         log.info("In handle new user registration");
         if(Objects.nonNull(userDTO.getId())) {
@@ -39,14 +44,30 @@ public class UserHandler {
         BeanUtils.copyProperties(userDTO, userEntity, "id");
         log.info("Registering new user {}", userDTO);
         UserEntity registeredUser = userEntityRepository.save(userEntity);
-
+        //TODO:Emmit a Kafka event to handle all post new user registration handling
+        UserStatisticsEntity userStatisticsEntity = userStatisticsEntityRepository.save(UserStatisticsEntity.builder()
+                .id(IdGenerator.getInstance().getID())
+                .userId(registeredUser.getId())
+                .matchesPlayed(0L)
+                .matchesWon(0L)
+                .matchesDrawn(0L)
+                .matchesLost(0L)
+                .goalsScored(0L)
+                .goalsAllowed(0L)
+                .cleanSheets(0L)
+                .goalsForwarded(0.00)
+                .goalsConceded(0.00)
+                .build());
+        UserStatisticsDTO userStatisticsDTO = new UserStatisticsDTO();
+        BeanUtils.copyProperties(userStatisticsEntity, userStatisticsDTO);
+        userDTO.setUserStatisticsDTO(userStatisticsDTO);
         BeanUtils.copyProperties(registeredUser, userDTO);
         return new Response<>(userDTO);
     }
 
     public Response<UserLoginResponseDTO> handleUserLogin(Long userId) {
         log.info("In handle user login");
-        UserEntity registeredUser = userEntityRepository.findById(userId).orElseThrow(() -> {
+        userEntityRepository.findById(userId).orElseThrow(() -> {
             log.warn("User not registered {}", userId);
             return new CustomException(UserErrorCode.USER_NOT_REGISTERED);
         });
@@ -85,11 +106,11 @@ public class UserHandler {
             log.warn("Count must be greater than 0");
         }
         int createCount = Integer.parseInt(count);
-        List<UserDTO> createdUsersList = new ArrayList<>(createCount);
-        List<UserEntity> newUsers = new ArrayList<>(createCount);
+
+        List<UserDTO> createdUsersList;
+        List<UserDTO> newUsersList = new ArrayList<>(createCount);
         for(int i=0;i<createCount;i++) {
-            UserDTO userDTO  = new UserDTO();
-            UserEntity newUser = UserEntity.builder()
+            UserDTO newUser = UserDTO.builder()
                     .userName(fakeUserUtil.getFakeUsername())
                     .userEmail(fakeUserUtil.getFakeEmailId())
                     .userPhoneNumber(fakeUserUtil.getFakePhoneNumber())
@@ -100,11 +121,16 @@ public class UserHandler {
                     .userAvatar(fakeUserUtil.getFakeAvatar())
                     .userGameId(fakeUserUtil.getFakeGameId())
                     .build();
-            newUsers.add(newUser);
-            BeanUtils.copyProperties(newUser, userDTO);
-            createdUsersList.add(userDTO);
+            newUsersList.add(newUser);
         }
-        userEntityRepository.saveAll(newUsers);
+
+        createdUsersList = newUsersList.stream()
+                .map(userDTO -> {
+                    Response<UserDTO> userDTOResponse = handleNewUserRegistration(userDTO);
+                    return userDTOResponse.getData();
+                })
+                .collect(Collectors.toList());
+
         if(createdUsersList.isEmpty()) {
             throw new SystemFailureException(SystemErrorCode.SOMETHING_WENT_WRONG);
         }

@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @Entity(name = "user")
@@ -18,14 +18,14 @@ public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-    String userName;
-    String userEmail;
-    String userPhoneNumber;
-    Date userDob;
-    Double userRating;
-    Integer userType; //refer UserType enum
-    String userCountry;
-    String userAvatar;
-    String userGameId;
+    private Long id;
+    private String userName;
+    private String userEmail;
+    private String userPhoneNumber;
+    private LocalDate userDob;
+    private Double userRating;
+    private Integer userType; //refer UserType enum
+    private String userCountry;
+    private String userAvatar;
+    private String userGameId;
 }

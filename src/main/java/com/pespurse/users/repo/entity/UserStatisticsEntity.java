@@ -1,10 +1,10 @@
 package com.pespurse.users.repo.entity;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "user_statistics")
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class UserStatisticsEntity {
 
     @Id
