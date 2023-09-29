@@ -3,10 +3,11 @@ package com.pespurse.users.util;
 import com.github.javafaker.Faker;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.Year;
 import java.util.Locale;
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 @Component
 public class FakeUserUtil {
@@ -25,8 +26,8 @@ public class FakeUserUtil {
         return FAKER.phoneNumber().phoneNumber();
     }
 
-    public Date getFakeDob() {
-        return new Date(ThreadLocalRandom.current().nextInt() * 1000L);
+    public LocalDate getFakeDob() {
+        return LocalDate.of(Year.now().getValue(), Month.APRIL.getValue(), 3);
     }
 
     public Double fetFakeUserRating() {
